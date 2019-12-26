@@ -2,10 +2,18 @@ const express = require("express");
 const router = express.Router();
 const Ninja = require("../models/ninja");
 
-router.get("/ninjas", (req, res, next) => {
-  res.send({
-    type: "GET"
-  });
+router.get("/ninjas", function(req, res, next) {
+  Ninja.aggregate()
+    .near({
+      type: "Point",
+      near: [parseFloat(req.query.lng), parseFloat(req.query.lat)],
+      maxDistance: 100000,
+      spherical: true,
+      distanceField: "dist.calculated"
+    })
+    .then(function(ninjas) {
+      res.send(ninjas);
+    });
 });
 
 router.post("/ninjas", (req, res, next) => {
