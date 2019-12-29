@@ -10,6 +10,7 @@ const app = express();
 mongoose.connect("mongodb://localhost/ninjago");
 mongoose.Promise = global.Promise;
 //middlewares
+app.use(express.static("public"));
 app.use(express.json());
 app.use("/api", routes);
 app.use((err, req, res, next) => {
